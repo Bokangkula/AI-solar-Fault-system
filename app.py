@@ -1,7 +1,7 @@
 import streamlit as st
 
 from utils.predict import get_prediction, _model
-from utils.gemini import get_explanation, DEFAULT_API_KEY
+from utils.gemini import get_explanation
 
 st.set_page_config(page_title="SolarSense", page_icon="\u2600\ufe0f", layout="centered")
 
@@ -40,7 +40,7 @@ FAULT_INFO = {
 }
 
 
-def render_result(fault_key: str, confidence: float, all_probabilities: dict, features, readings: dict, use_ai_explanation: bool, api_key: str):
+def render_result(fault_key: str, confidence: float, all_probabilities: dict, features, readings: dict, use_ai_explanation: bool):
     info = FAULT_INFO[fault_key]
     box = {"success": st.success, "warning": st.warning, "danger": st.error}[info["severity"]]
 
@@ -57,7 +57,7 @@ def render_result(fault_key: str, confidence: float, all_probabilities: dict, fe
     st.subheader("What to do")
     if use_ai_explanation:
         with st.spinner("Asking Gemini for a technician-level explanation..."):
-            ai_text = get_explanation(info["label"], confidence, readings, api_key=api_key)
+           ai_text = get_explanation(info["label"], confidence, readings)
         st.write(ai_text)
     else:
         st.write(info["advice"])
@@ -74,17 +74,7 @@ def main():
 
     with st.sidebar:
         st.header("Settings")
-        if DEFAULT_API_KEY:
-            st.success("Gemini API key loaded from .env", icon="\u2705")
-            api_key_input = None
-        else:
-            api_key_input = st.text_input(
-                "Gemini API key (optional)",
-                type="password",
-                help="No key found in .env. Paste one here for this session, "
-                "or run 'python run.py' to be prompted and have it saved for next time.",
-            )
-            st.caption("Get a free key at aistudio.google.com/app/apikey")
+        st.success("SolarSense AI is ready", icon="✅")
 
     if _model is None:
         st.error(
@@ -121,7 +111,7 @@ def main():
         fault_key, confidence, all_probabilities, features = get_prediction(**readings)
 
         st.header("2. Diagnosis")
-        render_result(fault_key, confidence, all_probabilities, features, readings, use_ai_explanation, api_key_input)
+        render_result(fault_key, confidence, all_probabilities, features, readings, use_ai_explanation)
 
 
 if __name__ == "__main__":
