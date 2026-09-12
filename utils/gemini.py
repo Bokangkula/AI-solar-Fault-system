@@ -20,6 +20,13 @@ from dotenv import load_dotenv
 load_dotenv()  # picks up GEMINI_API_KEY from a local .env file, if present
 
 DEFAULT_API_KEY = os.getenv("GEMINI_API_KEY")
+
+try:
+    import streamlit as st
+    if "GEMINI_API_KEY" in st.secrets:
+        DEFAULT_API_KEY = st.secrets["GEMINI_API_KEY"]
+except Exception:
+    pass
 GEMINI_MODEL = "gemini-3.5-flash-lite"
 
 FALLBACK_TEMPLATE = (
