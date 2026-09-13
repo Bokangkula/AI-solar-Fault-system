@@ -93,7 +93,7 @@ def main():
         idc1 = st.number_input("DC current - string 1 (A)", min_value=0.0, max_value=20.0, value=5.0, step=0.1)
     with col2:
         st.markdown("**String 2**")
-        vdc2 = st.number_input("DC voltage - string 2 (V)", min_value=0.0, max_value=1000.0, value=30.0, step=0.1))
+        vdc2 = st.number_input("DC voltage - string 2 (V)", min_value=0.0, max_value=1000.0, value=30.0, step=0.1)
         idc2 = st.number_input("DC current - string 2 (A)", min_value=0.0, max_value=20.0, value=5.0, step=0.1)
 
     col3, col4 = st.columns(2)
